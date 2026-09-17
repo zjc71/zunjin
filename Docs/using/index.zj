@@ -1,0 +1,4 @@
+# zunjin 使用指南
+# 编译: 使用 Makefile（make all）或 BuildScripts/build.bat
+# 运行: zunjin <script.zj>
+# 示例: zunjin Samples/demo.z

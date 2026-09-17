@@ -1,0 +1,35 @@
+# zunjin 解释器架构笔记（0.2.1）
+
+## 执行模型
+
+AST 树遍历解释执行：源码 → 词法（lexer）→ 语法（parser）→ AST → VM。
+
+## 性能优化（独立实现，借鉴主流架构思路）
+
+| 优化 | 思路来源 | 实现位置 |
+|---|---|---|
+| 枚举操作码分发 | 字节码操作码设计 | Headers/ast.h `ZjnOp`，Core/vm.c |
+| 有序哈希字典 | 紧凑字典（插入序 + 哈希索引） | Runtime/object.c |
+| 哈希作用域 + 参数所有权转移 | 帧局部变量/参数直传 | Core/env.c，Core/vm.c |
+| 值空闲链表 | 小对象 free-list | Runtime/object.c |
+| 函数链哈希化（0.2.1） | 全局内置函数查找热路径 | Core/env.c func_slots |
+| 关键字二分查找（0.2.1） | 有序表查找 | Syntax/lexer/lexer.c |
+| Token 空闲链表（0.2.1） | 小对象 free-list | Syntax/lexer/lexer.c |
+| 模块缓存 + 搜索路径 + 命名空间 | 模块缓存表 / import 机制 | Core/vm.c `zjn_vm_import_module` |
+
+### 参考（仅借鉴架构思想，无代码复制）
+- 主流脚本语言：字节码操作码、字典哈希化、import 缓存、函数闭包
+
+
+## 模块系统设计
+
+- `ZVAL_MODULE` 值类型：持有命名空间环境（ns）+ 模块 AST（函数体引用）。
+- 模块缓存数组挂在 VM 上（ZJN_MAX_MODULES=128）。
+- 模块函数闭包 = 模块命名空间（等价 __globals__）；顶层函数闭包 = 全局环境；
+  函数体内嵌套定义不捕获瞬态帧（防悬垂）。
+- 属性访问回退：模块未定义成员时查全局内置（如 math.floor）。
+
+## 已知边界
+- Windows 上 long 为 32 位：整数溢出会静默转 float（__builtin_*_overflow），
+  标准库 LCG 已按 32 位设计（16 位模）。
+- 递归深度上限 512（防 C 栈溢出）。

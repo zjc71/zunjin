@@ -1,0 +1,5 @@
+﻿n = 0
+loop n < 2:
+    n = n + 1
+    when yes:
+        put("ok")

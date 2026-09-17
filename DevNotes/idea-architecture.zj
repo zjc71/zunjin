@@ -1,0 +1,44 @@
+# idea（zunjin IDE）架构笔记（0.2.1）
+
+## 参考 IntelliJ IDEA Community 架构（仅借鉴思想，独立实现）
+
+| 组件 | 对应 IntelliJ 概念 | 实现 |
+|---|---|---|
+| modules/actions/ | ActionManager | 动作注册表：按 ID 排序 + 二分分发；WndProc 不再维护巨型 switch |
+| modules/platform/modules.c | 平台 + 插件生命周期 | 模块描述符（name/init/shutdown），顺序启动 / 逆序关闭 |
+| modules/project/ VFS 缓存 | Virtual File System | 目录列表按 (路径, 最后修改时间) 缓存，仅重扫变化目录 |
+| modules/editor/syntax.c 符号缓存 | PSI / 增量符号表 | 文档按 (长度, 哈希) 命中时复用符号表，跳过全量扫描 |
+| modules/search/ 文件列表索引 | 文件索引 | 首次搜索枚举文件 + 目录时间戳；后续校验后复用文件列表 |
+| 各模块 Xxx_RegisterActions | 插件注册扩展点 | 项目树右键动作由 project 模块注册，编辑器动作由 editor 模块注册 |
+
+## 动作系统（ActionManager 模式）
+
+```c
+/* 任何模块都可注册动作，无需修改主窗口过程 */
+static void MyAct(HWND h, int id) { ... }
+Actions_Register(ID_MY_ACTION, MyAct);
+```
+
+分发：WM_COMMAND → 动态 ID 范围（最近文件/补全弹窗）→ IDC_EDIT 通知 →
+`Actions_Dispatch(hwnd, id)`（二分查找，O(log n)）。
+
+## 模块生命周期（平台 + 插件模式）
+
+```c
+static const IdeaModuleDesc desc = { L"myplugin", MyInit, MyShutdown };
+Modules_Register(&desc);   /* 在 Xxx_RegisterModule 中调用 */
+```
+
+Modules_InitAll() 按注册顺序启动（编辑器设置先于平台字体，启动画面最后），
+WM_DESTROY 时 Modules_ShutdownAll() 逆序关闭（释放字体/画刷）。
+
+## VFS 目录缓存
+
+- 缓存条目：路径 + 目录最后修改时间 + 条目数组（堆分配，DIR_ENT_CAP=2048）。
+- 命中判定：GetFileAttributesEx 的时间戳与缓存一致 → 复用，零 I/O 重扫。
+- 未命中：FindFirstFile 扫描并更新缓存；轮转替换（DIR_CACHE_MAX=64）。
+
+## 构建
+
+- idea/build.bat：gcc 单步编译全部源 + 模块（含 actions、platform/modules）。
+- 新增模块只需加入 build.bat 的源列表与 Modules_RegisterBuiltins 注册。

@@ -1,0 +1,7 @@
+# zunjin 常见问题 (FAQ)
+# 1. zunjin 是什么？
+#    zunjin 是一种全新的独立脚本编程语言，拥有自创的关键字体系。
+# 2. 如何运行 .zj 文件？
+#    编译后运行: ./zunjin examples/demo.z
+# 3. 支持哪些特性？
+#    变量、if/elif/else条件判断、while循环、自定义函数、字符串/数字/布尔/列表类型

@@ -1,0 +1,27 @@
+put('你好，zunjin！')
+put ('welcome to zunjin')          # 输出
+
+u = 85
+j = 5                     # 变量直接赋值，无需声明类型
+when u+j >= 90:
+    put('优秀')
+whenelse u+j >= 60:
+    put('及格')
+otherwise:
+    put('不及格')
+
+i = 1
+loop i <= 3:
+    put(i)
+    i = i + 1
+
+put('---你好---')
+
+p = 90
+k = 45
+when p+k*k+p >=100:
+     put('好')
+whenelse p+k*k+p >=50:
+     put('中')
+otherwise:
+     put('不匹配')          

@@ -1,0 +1,6 @@
+﻿n = 0
+loop yes:
+    n = n + 1
+    put(n)
+    when n == 1:
+        stop

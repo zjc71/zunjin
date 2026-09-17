@@ -1,0 +1,39 @@
+# 性能基准测试：与原始解释器对比（枚举操作码分发优化）
+# 运行时间由外部工具测量（Start-Process 计时）
+
+proc fib(n):
+    when n <= 1:
+        give n
+    give fib(n - 1) + fib(n - 2)
+
+proc sum_loop(n):
+    s = 0
+    i = 0
+    loop i < n:
+        s = s + i * 2 - i % 7
+        i = i + 1
+    give s
+
+proc dict_ops(n):
+    d = {}
+    i = 0
+    loop i < n:
+        d["key" + text(i % 100)] = i
+        i = i + 1
+    s = 0
+    i = 0
+    loop i < n:
+        k = "key" + text(i % 100)
+        when k of d:
+            s = s + d[k]
+        i = i + 1
+    give s
+
+a = sum_loop(400000)
+b = dict_ops(20000)
+f = fib(24)
+
+put("sum_loop(400000) =", a)
+put("dict_ops(20000) =", b)
+put("fib(24) =", f)
+put("基准完成")

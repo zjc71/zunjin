@@ -1,0 +1,117 @@
+# ============================================================
+# zunjin 模块系统测试（use 语句 + 属性访问）
+# ============================================================
+
+put("===== 1. use math =====")
+use math
+put(math.pi)              # 3.141592653589793
+put(math.e)               # 2.718281828459045
+put(math.abs(-5))         # 5
+put(math.min(3, 7))       # 3
+put(math.max(3, 7))       # 7
+put(math.sqrt(16))        # 4.0
+put(math.pow(2, 10))      # 1024
+put(math.floor(3.7))      # 3
+put(math.ceil(3.2))       # 4
+put(math.factorial(5))    # 120
+put(math.gcd(12, 18))     # 6
+
+put("===== 2. use string =====")
+use string
+put(string.digits)
+put(string.capitalize("hello"))     # Hello
+put(string.title("hello world"))    # Hello World
+put(string.swapcase("AbC"))         # aBc
+put(string.count_sub("banana", "an"))  # 2
+put(string.starts("hello", "he"))   # yes
+put(string.ends("hello", "lo"))     # yes
+put(string.trim("  pad  "))         # pad
+
+put("===== 3. use types =====")
+use types
+put(types.type_of(42))              # int
+put(types.is_number(3.14))          # yes
+put(types.is_string("x"))           # yes
+put(types.is_list([1, 2]))          # yes
+put(types.is_dict({}))              # yes
+put(types.is_bool(yes))             # yes
+put(types.is_func(put))             # yes (内置函数)
+
+put("===== 4. use collections =====")
+use collections
+put(collections.head([1, 2, 3, 4], 2))   # [1, 2]
+put(collections.tail([1, 2, 3, 4], 2))   # [3, 4]
+put(collections.unique([1, 2, 1, 3, 2])) # [1, 2, 3]
+put(collections.flatten_once([[1, 2], 3])) # [1, 2, 3]
+put(collections.sorted_keys({"b": 1, "a": 2})) # [a, b]
+
+put("===== 5. use functools =====")
+use functools
+proc double(x):
+    give x * 2
+put(functools.map(double, [1, 2, 3]))      # [2, 4, 6]
+proc is_even(x):
+    give x % 2 == 0
+put(functools.filter(is_even, [1, 2, 3, 4]))  # [2, 4]
+proc add(a, b):
+    give a + b
+put(functools.reduce(add, [1, 2, 3, 4], 0))    # 10
+
+put("===== 6. use itertools =====")
+use itertools
+put(itertools.repeat("x", 3))     # [x, x, x]
+put(itertools.chain([1, 2], [3])) # [1, 2, 3]
+put(itertools.take(2, [1, 2, 3])) # [1, 2]
+put(itertools.drop(1, [1, 2, 3])) # [2, 3]
+put(itertools.count(1, 2, 5))     # [1, 3, 5, 7, 9]
+
+put("===== 7. use random =====")
+use random
+random.seed(42)
+a = random.randint(1, 100)
+b = random.randint(1, 100)
+put(a != b either a == b)          # yes（合法范围）
+put(a >= 1 both a <= 100)          # yes
+put(a >= 1 both b <= 100)          # yes
+
+put("===== 8. use json =====")
+use json
+put(json.dumps({"name": "zunjin", "ver": 1}))   # {"name":"zunjin","ver":1}
+put(json.dumps([1, 2, "x"]))                    # [1,2,"x"]
+put(json.loads('{"a": 1, "b": "hi"}'))          # {'a': 1, 'b': 'hi'}
+put(json.loads("[1, 2, 3]"))                    # [1, 2, 3]
+
+put("===== 9. use logging =====")
+use logging
+logging.set_level(logging.ERROR)
+logging.info("不应输出")
+logging.error("只输出错误")
+
+put("===== 10. use pathlib + re + html + datetime =====")
+use pathlib
+put(pathlib.join("a", "b"))        # a/b
+put(pathlib.basename("/x/y.z"))    # y.z
+put(pathlib.extname("file.txt"))   # .txt
+use re
+put(re.match("a*", "aaa"))         # yes
+put(re.match("a?b", "ab"))         # no（? 必须占一个字符）
+put(re.search("b", "abc"))         # yes
+use html
+put(html.escape("<a> & \"b\""))    # &lt;a&gt; &amp; &quot;b&quot;
+use datetime
+put(datetime.is_leap_year(2024))   # yes
+put(datetime.is_leap_year(2023))   # no
+put(datetime.days_in_month(2024, 2)) # 29
+
+put("===== 11. 模块缓存（二次 use 不重复执行） =====")
+use math
+put(math.abs(-1))                  # 1
+
+put("===== 12. 模块状态（random 种子变化） =====")
+random.seed(1)
+x1 = random.randint(1, 1000000)
+random.seed(1)
+x2 = random.randint(1, 1000000)
+put(x1 == x2)                      # yes（同种子同序列）
+
+put("===== 模块测试通过 =====")

@@ -1,0 +1,49 @@
+# ============================================================
+# zunjin GUI 演示：迷你计算器（窗口程序！）
+# 运行：zunjin tests\gui_demo.z
+# ============================================================
+
+put('计算器已启动，请在窗口中操作...')
+
+# ---------- 创建窗口 ----------
+win = window('zunjin 计算器', 340, 240)
+when win == 0:
+    put('错误: 窗口创建失败')
+    stop
+
+# ---------- 界面控件 ----------
+label(win, '第一个数:', 20, 22)
+ta = textbox(win, 100, 18, 200, 26)
+
+label(win, '第二个数:', 20, 62)
+tb = textbox(win, 100, 58, 200, 26)
+
+result = label(win, '结果: 请点击下方按钮', 20, 100)
+
+btn_add  = button(win, '相加',  30,  150, 80, 34)
+btn_sub  = button(win, '相减',  120, 150, 80, 34)
+btn_mul  = button(win, '相乘',  210, 150, 80, 34)
+btn_quit = button(win, '退出',  130, 195, 90, 30)
+
+# ---------- 显示窗口 ----------
+show(win)
+
+# ---------- 事件循环 ----------
+loop is_open(win):
+    cid = wait_click(win)
+    when cid == 0:
+        stop                      # 窗口被关闭
+    when cid == btn_quit:
+        close(win)
+    whenelse cid == btn_add either cid == btn_sub either cid == btn_mul:
+        # 读取输入并计算（输入非法时给出提示，不崩溃）
+        a = integer(get_text(ta))
+        b = integer(get_text(tb))
+        when cid == btn_add:
+            set_text(result, '结果: ' + text(a + b))
+        whenelse cid == btn_sub:
+            set_text(result, '结果: ' + text(a - b))
+        otherwise:
+            set_text(result, '结果: ' + text(a * b))
+
+put('计算器已退出，再见！')

@@ -1,0 +1,50 @@
+# 函数调用密集基准：内置函数 + 用户函数 + 字符串操作混合
+# （验证环境函数链哈希化的收益）
+
+proc fib(n):
+    when n <= 1:
+        give n
+    give fib(n - 1) + fib(n - 2)
+
+proc classify(x):
+    when x % 3 == 0:
+        give "fizz"
+    whenelse x % 5 == 0:
+        give "buzz"
+    otherwise:
+        give text(x)
+
+proc heavy(n):
+    s = 0
+    i = 0
+    loop i < n:
+        # 大量内置函数调用：text/absolute/minimum/maximum
+        a = absolute(i - 1000)
+        b = minimum(i, 500)
+        c = maximum(i, 10)
+        s = s + a + b - c
+        # 字符串操作
+        t = text(i) + "-" + text(a % 100)
+        when size(t) > 4:
+            s = s + 1
+        i = i + 1
+    give s
+
+proc call_stress(n):
+    s = 0
+    t = ""
+    i = 0
+    loop i < n:
+        t = t + classify(i % 100)
+        s = s + size(text(i))
+        i = i + 1
+    give s + size(t)
+
+a = heavy(200000)
+b = call_stress(50000)
+f = fib(22)
+
+put("heavy =", a)
+put("call_stress =", b)
+put("fib(22) =", f)
+put("函数基准完成")

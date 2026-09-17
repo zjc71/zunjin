@@ -1,0 +1,3 @@
+﻿loop yes:
+    when yes:
+        put("ok")

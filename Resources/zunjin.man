@@ -1,0 +1,21 @@
+ZUNJIN(1)                    通用命令手册                   ZUNJIN(1)
+
+名称
+    zunjin - zunjin 脚本语言解释器
+
+概要
+    zunjin [选项] 文件.z [参数...]
+
+描述
+    zunjin 是一种独立脚本编程语言的解释器。
+    文件后缀为 .z。
+
+选项
+    -h, --help     显示帮助信息
+    -v, --version  显示版本信息
+
+示例
+    zunjin examples/demo.z
+
+参见
+    完整文档在 Doc/ 目录

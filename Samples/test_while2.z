@@ -1,0 +1,8 @@
+﻿n = 0
+loop n < 5:
+    n = n + 1
+    when n == 3:
+        next
+    when n == 4:
+        stop
+    put("n =", n)

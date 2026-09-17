@@ -1,0 +1,83 @@
+# 字典哈希表压力测试：插入/查找/删除/重哈希/顺序保持
+put("===== 字典压力测试 =====")
+
+# 1. 大量插入触发多次扩容与重哈希
+d = {}
+i = 0
+loop i < 2000:
+    d["key" + text(i)] = i * 2
+    i = i + 1
+put(size(d))            # 2000
+put(d["key" + text(0)])       # 0
+put(d["key" + text(1999)])    # 3998
+put(d["key" + text(1000)])    # 2000
+
+# 2. 覆盖已有键（值更新，顺序不变）
+d["key" + text(5)] = 999
+put(d["key" + text(5)])       # 999
+put(size(d))            # 2000
+
+# 3. 删除 + 顺序保持
+delete(d, "key" + text(0))
+delete(d, "key" + text(1999))
+put(size(d))            # 1998
+put("key0" of d)        # no
+put("key" + text(1) of d)     # yes
+put(d["key" + text(1)])       # 2
+
+# 4. 删除后继续插入（索引重哈希正确性）
+d["fresh"] = 42
+put(d["fresh"])         # 42
+put(size(d))            # 1999
+
+# 5. 键遍历顺序 = 插入顺序
+seq = []
+i = 0
+loop i < 5:
+    d2 = {}
+    j = 0
+    loop j < 50:
+        d2["k" + text(j)] = j
+        j = j + 1
+    push(seq, size(d2))
+    i = i + 1
+put(seq)                # [50, 50, 50, 50, 50]
+
+# 6. 字符串键与空字典
+e = {}
+put(size(e))            # 0
+put("x" of e)           # no
+e["a"] = 1
+put(size(e))            # 1
+delete(e, "a")
+put(size(e))            # 0
+put("a" of e)           # no
+clear(e)
+put(size(e))            # 0
+
+# 7. 打印顺序（插入序）
+f = {}
+f["z"] = 1
+f["a"] = 2
+f["m"] = 3
+put(f)                  # {'z': 1, 'a': 2, 'm': 3}
+
+# 8. 大规模删除 + 再插入（索引重哈希压力）
+g = {}
+i = 0
+loop i < 500:
+    g["x" + text(i)] = i
+    i = i + 1
+i = 0
+loop i < 500:
+    when i % 2 == 0:
+        delete(g, "x" + text(i))
+    i = i + 1
+put(size(g))            # 250
+put("x0" of g)          # no
+put("x1" of g)          # yes
+put(g["x" + text(499)]) # 499
+g["x" + text(499)] = 1
+put(g["x" + text(499)]) # 1
+
+put("===== 字典测试通过 =====")

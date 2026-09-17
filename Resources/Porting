@@ -1,0 +1,9 @@
+zunjin 移植指南
+==============
+
+本文件记录将 zunjin 移植到新平台时的注意事项。
+
+当前支持平台：
+- Windows (MinGW/MSYS2)
+- Linux (gcc/clang)
+- macOS (gcc/clang) - 开发中

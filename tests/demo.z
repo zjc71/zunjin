@@ -1,0 +1,77 @@
+# ============================================================
+# zunjin 语言综合演示：学生成绩统计程序
+# 覆盖：变量/列表/字典/函数/循环/条件/字符串/切片/异常
+# ============================================================
+
+# ---------- 1. 数据结构：学生列表，每人一个字典 ----------
+students = [
+    {'name': '张三', 'scores': [85, 92, 78]},
+    {'name': '李四', 'scores': [60, 75, 88]},
+    {'name': '王五', 'scores': [95, 90, 97]},
+    {'name': '赵六', 'scores': [45, 50, 62]},
+]
+
+# ---------- 2. 函数：计算平均分 ----------
+proc average(lst):
+    total = sum(lst)
+    give total / size(lst)
+
+# ---------- 3. 函数：按分数评定等级 ----------
+proc grade(avg):
+    when avg >= 90:
+        give 'A'
+    whenelse avg >= 75:
+        give 'B'
+    whenelse avg >= 60:
+        give 'C'
+    otherwise:
+        give 'D'
+
+# ---------- 4. 打印表头 ----------
+put('学生成绩统计')
+put('=' * 30)
+
+# ---------- 5. 遍历每个学生，输出成绩 ----------
+foreach s of students:
+    avg = average(s['scores'])
+    g = grade(avg)
+    put(s['name'] + ': 平均 ' + text(avg) + ' 分，等级 ' + g)
+
+# ---------- 6. 全班汇总统计 ----------
+all_scores = []
+foreach s of students:
+    extend(all_scores, s['scores'])
+
+put('=' * 30)
+put('全班人数: ' + text(size(students)))
+put('最高分:   ' + text(maximum(all_scores)))
+put('最低分:   ' + text(minimum(all_scores)))
+put('全班平均: ' + text(total(all_scores) / size(all_scores)))
+
+# ---------- 7. 找出有不及格科目的同学 ----------
+put('不及格名单:')
+foreach s of students:
+    when minimum(s['scores']) < 60:
+        put('  - ' + s['name'] + '（最低 ' + text(minimum(s['scores'])) + ' 分）')
+
+# ---------- 8. 演示切片：查看王五的 3 门成绩 ----------
+wang = students[2]
+put('王五的成绩单: ' + text(wang['scores']))
+put('王五的切片[1:]: ' + text(wang['scores'][1:]))
+put('王五的倒序: ' + text(wang['scores'][::-1]))
+
+# ---------- 9. 演示异常处理：除以零不崩溃 ----------
+attempt:
+    x = 10 / 0
+seize:
+    put('捕获异常：除数为零被拦截，程序继续运行')
+
+# ---------- 10. 演示 while 循环与复合赋值 ----------
+count = 1
+result = 0
+loop count <= 5:
+    result += count
+    count += 1
+put('1+2+3+4+5 = ' + text(result))
+
+put('程序执行完毕！')

@@ -1,0 +1,4 @@
+﻿s = "hello world"
+put("ell" in s)
+put("xyz" in s)
+put(3 in [1, 2, 3])

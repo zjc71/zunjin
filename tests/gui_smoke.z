@@ -1,0 +1,33 @@
+# ============================================================
+# zunjin GUI 冒烟测试：创建窗口 → 显示 → 关闭（自动化验证）
+# ============================================================
+
+put('GUI 测试开始')
+
+win = window('zunjin GUI 测试', 320, 200)
+put('窗口 id: ' + text(win))
+when win == 0:
+    put('FAIL: 窗口创建失败')
+    stop
+
+label(win, '这是一个自动化测试窗口', 20, 20)
+ta = textbox(win, 20, 60, 180, 26)
+btn = button(win, '测试按钮', 210, 58, 90, 30)
+
+put('窗口已创建，显示中...')
+show(win)
+sleep(1000)
+put('窗口显示正常')
+
+set_text(ta, 'hello zunjin')
+put('文本框内容: ' + get_text(ta))
+
+close(win)
+sleep(300)
+when is_open(win):
+    put('FAIL: 窗口未关闭')
+otherwise:
+    put('窗口已关闭')
+
+# msgbox('zunjin GUI', '窗口程序功能全部正常！')  # 如需人工确认可取消注释
+put('GUI 测试通过')

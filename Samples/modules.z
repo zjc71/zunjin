@@ -1,0 +1,47 @@
+# ============================================
+# zunjin 模块系统示例 - modules.z
+# 演示：use 导入、属性访问、标准库组合
+# ============================================
+
+# ---------- 1. 数学模块 ----------
+use math
+put("pi =", math.pi)
+put("2^10 =", math.pow(2, 10))
+put("sqrt(144) =", math.sqrt(144))
+put("floor(3.7) =", math.floor(3.7))
+put("gcd(48, 36) =", math.gcd(48, 36))
+put("7! =", math.factorial(7))
+
+# ---------- 2. 字符串与类型模块 ----------
+use string
+use types
+name = "zunjin language"
+put(string.title(name))
+put("is_string:", types.is_string(name))
+put("is_list:", types.is_list(name))
+
+# ---------- 3. 集合与函数式工具 ----------
+use collections
+use functools
+nums = [5, 2, 8, 1, 9]
+put("排序:", collections.sorted(nums))
+put("去重:", collections.unique([1, 2, 1, 3]))
+
+proc square(x):
+    give x * x
+put("平方:", functools.map(square, [1, 2, 3, 4]))
+
+# ---------- 4. 随机与 JSON ----------
+use random
+use json
+random.seed(2026)
+put("随机数:", random.randint(1, 100), random.randint(1, 100))
+data = {"lang": "zunjin", "year": 2026}
+put("JSON:", json.dumps(data))
+
+# ---------- 5. 自定义模块（与脚本同目录） ----------
+# 创建 mymod.z 后取消注释：
+# use mymod
+# put(mymod.greet("世界"))
+
+put("===== 模块示例执行完毕 =====")

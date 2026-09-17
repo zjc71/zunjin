@@ -1,0 +1,6 @@
+﻿n = 5
+when n > 0:
+    when n == 3:
+        put("eq 3")
+    otherwise:
+        put("other")

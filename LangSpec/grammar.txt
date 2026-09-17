@@ -1,0 +1,81 @@
+zunjin 语言语法定义
+====================
+版本: 1.0
+文件后缀: .z
+
+一、词法结构
+----------
+1. 注释: 以 # 开头，到行尾结束
+2. 标识符: 字母或下划线开头，后跟字母、数字、下划线
+3. 数字: 整数 (42) 和浮点数 (3.14)
+4. 字符串: 双引号 "..." 或单引号 '...'，支持转义 \n \t \\ \" \'
+5. 缩进: 空格缩进，4 空格为推荐单位
+
+二、关键字
+---------
+if, elseif, else, while, for, in,
+fn, return, and, or, not,
+true, false, null, break, continue
+
+三、运算符
+---------
+算术: + - * / // %
+比较: == != < > <= >=
+逻辑: and or not
+赋值: =
+
+四、语句规则
+----------
+program     ::= statement*
+statement   ::= simple_stmt | compound_stmt
+simple_stmt ::= assign_stmt | expr_stmt
+assign_stmt ::= identifier '=' expression
+expr_stmt   ::= expression
+
+compound_stmt ::= if_stmt | while_stmt | for_stmt | func_def
+
+if_stmt    ::= 'if' expression ':' NEWLINE INDENT block DEDENT
+               ('elseif' expression ':' NEWLINE INDENT block DEDENT)*
+               ('else' ':' NEWLINE INDENT block DEDENT)?
+
+while_stmt ::= 'while' expression ':' NEWLINE INDENT block DEDENT
+
+for_stmt   ::= 'for' identifier 'in' expression ':' NEWLINE INDENT block DEDENT
+
+func_def   ::= 'fn' identifier '(' [params] ')' ':' NEWLINE INDENT block DEDENT
+params     ::= identifier (',' identifier)*
+
+block      ::= statement*
+
+return_stmt ::= 'return' [expression]
+break_stmt  ::= 'break'
+continue_stmt ::= 'continue'
+
+五、表达式 (优先级从低到高)
+------------------------
+expression ::= or_expr
+or_expr    ::= and_expr ('or' and_expr)*
+and_expr   ::= not_expr ('and' not_expr)*
+not_expr   ::= 'not' not_expr | comparison
+comparison ::= term (('=='|'!='|'<'|'>'|'<='|'>=') term)*
+term       ::= factor (('+'|'-') factor)*
+factor     ::= unary (('*'|'/'|'//'|'%') unary)*
+unary      ::= '-' unary | call
+call       ::= primary ('(' [args] ')')*
+primary    ::= NUMBER | STRING | 'true' | 'false' | 'null'
+             | identifier | '(' expression ')'
+args       ::= expression (',' expression)*
+
+六、内置函数
+----------
+print(*args)  - 打印值到控制台
+range(n)      - 生成 0 到 n-1 的整数列表
+range(s, e)   - 生成 s 到 e-1 的整数列表
+len(obj)      - 返回列表或字符串长度
+str(val)      - 转换为字符串
+int(val)      - 转换为整数
+float(val)    - 转换为浮点数
+
+七、类型系统
+----------
+null, bool, int, float, string, list, function

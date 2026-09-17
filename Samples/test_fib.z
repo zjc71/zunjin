@@ -1,0 +1,18 @@
+﻿proc fibonacci(n):
+    when n <= 1:
+        give n
+    a = 0
+    b = 1
+    i = 2
+    loop i <= n:
+        temp = a + b
+        a = b
+        b = temp
+        i = i + 1
+    give b
+
+put(fibonacci(0))
+put(fibonacci(1))
+put(fibonacci(2))
+put(fibonacci(5))
+put(fibonacci(10))
