@@ -6,7 +6,7 @@
 ![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-lightgrey.svg)
 ![Language](https://img.shields.io/badge/Language-C11-orange.svg)
 
-- **当前版本**：0.2.4
+- **当前版本**：0.0.1
 - **文件扩展名**：`.z`
 - **源码编码**：UTF-8（支持中文）
 - **运行方式**：`zunjin.exe 脚本.z`，无参数进入交互模式（REPL）
